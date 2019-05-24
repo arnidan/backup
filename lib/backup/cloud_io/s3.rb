@@ -14,7 +14,7 @@ module Backup
 
       attr_reader :access_key_id, :secret_access_key, :use_iam_profile,
         :region, :bucket, :chunk_size, :encryption, :storage_class,
-        :fog_options
+        :endpoint, :fog_options
 
       def initialize(options = {})
         super
@@ -27,6 +27,7 @@ module Backup
         @chunk_size         = options[:chunk_size]
         @encryption         = options[:encryption]
         @storage_class      = options[:storage_class]
+        @endpoint           = options[:endpoint]
         @fog_options        = options[:fog_options]
       end
 
@@ -129,6 +130,9 @@ module Backup
             else
               opts[:aws_access_key_id] = access_key_id
               opts[:aws_secret_access_key] = secret_access_key
+            end
+            if endpoint
+              opts[:endpoint] = endpoint
             end
             opts.merge!(fog_options || {})
             conn = Fog::Storage.new(opts)
